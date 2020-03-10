@@ -7,6 +7,7 @@ import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import faridnet.com.daggerpractice.BaseApplication;
+import faridnet.com.daggerpractice.SessionManager;
 
 @Component (
 
@@ -15,6 +16,8 @@ import faridnet.com.daggerpractice.BaseApplication;
         })
 
 public interface AppComponent extends AndroidInjector<BaseApplication> {
+
+    SessionManager sessionManager();
 
     @Component.Builder
     interface Builder{
