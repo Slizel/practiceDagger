@@ -1,17 +1,18 @@
 package faridnet.com.daggerpractice.ui.auth;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+
 import androidx.lifecycle.ViewModelProviders;
 
-import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
+
 import dagger.android.support.DaggerAppCompatActivity;
 import faridnet.com.daggerpractice.R;
 import faridnet.com.daggerpractice.models.User;
+import faridnet.com.daggerpractice.ui.main.MainActivity;
 import faridnet.com.daggerpractice.viewmodels.ViewModelProviderFactory;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,7 +28,7 @@ import com.bumptech.glide.RequestManager;
 
 import javax.inject.Inject;
 
-public class AuthActivity extends DaggerAppCompatActivity implements View.OnClickListener  {
+public class AuthActivity extends DaggerAppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "AuthActivity";
 
@@ -54,7 +55,6 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
         findViewById(R.id.login_button).setOnClickListener(this);
 
-
         viewModel = ViewModelProviders.of(this, providerFactory).get(AuthViewModel.class);
 
         setLogo();
@@ -63,11 +63,12 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     }
 
     private void subscribeObservers(){
-        viewModel.ObserveUser().observe(this, new Observer<AuthResource<User>>() {
+        viewModel.observeAuthState().observe(this, new Observer<AuthResource<User>>() {
             @Override
             public void onChanged(AuthResource<User> userAuthResource) {
                 if(userAuthResource != null){
                     switch (userAuthResource.status){
+
                         case LOADING:{
                             showProgressBar(true);
                             break;
@@ -76,16 +77,14 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                         case AUTHENTICATED:{
                             showProgressBar(false);
                             Log.d(TAG, "onChanged: LOGIN SUCCESS: " + userAuthResource.data.getEmail());
+                            onLoginSucess();
                             break;
                         }
 
                         case ERROR:{
-                            Log.e(TAG, "onChanged: " + userAuthResource.message);
                             showProgressBar(false);
-                            Toast.makeText(AuthActivity.this,
-                                    userAuthResource.message + "\nDid you enter a number between 0 and 10?",
-                                    Toast.LENGTH_SHORT)
-                                    .show();
+                            Toast.makeText(AuthActivity.this, userAuthResource.message
+                                    + "\nDid you enter a number between 1 and 10?", Toast.LENGTH_SHORT).show();
                             break;
                         }
 
@@ -99,10 +98,18 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
         });
     }
 
+    private void onLoginSucess(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
+
     private void showProgressBar(boolean isVisible){
         if(isVisible){
             progressBar.setVisibility(View.VISIBLE);
-        }else{
+        }
+        else{
             progressBar.setVisibility(View.GONE);
         }
     }
@@ -118,10 +125,10 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
         switch (v.getId()){
 
             case R.id.login_button:{
+
                 attemptLogin();
                 break;
             }
-
         }
     }
 

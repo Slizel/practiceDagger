@@ -9,12 +9,17 @@ import dagger.android.support.AndroidSupportInjectionModule;
 import faridnet.com.daggerpractice.BaseApplication;
 import faridnet.com.daggerpractice.SessionManager;
 
-@Component (
+import javax.inject.Singleton;
 
+@Singleton
+@Component(
         modules = {
-                AndroidSupportInjectionModule.class
-        })
-
+                AndroidSupportInjectionModule.class,
+                ActivityBuildersModule.class,
+                AppModule.class,
+                ViewModelFactoryModule.class,
+        }
+)
 public interface AppComponent extends AndroidInjector<BaseApplication> {
 
     SessionManager sessionManager();
