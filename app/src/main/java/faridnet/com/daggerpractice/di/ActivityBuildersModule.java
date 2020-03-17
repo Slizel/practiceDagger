@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector;
 import faridnet.com.daggerpractice.di.auth.AuthModule;
 import faridnet.com.daggerpractice.di.auth.AuthViewModelsModule;
 import faridnet.com.daggerpractice.di.main.MainFragmentBuildersModule;
+import faridnet.com.daggerpractice.di.main.MainModule;
 import faridnet.com.daggerpractice.di.main.MainViewModelsModule;
 import faridnet.com.daggerpractice.ui.auth.AuthActivity;
 import faridnet.com.daggerpractice.ui.main.MainActivity;
@@ -17,7 +18,7 @@ public abstract class ActivityBuildersModule {
     abstract AuthActivity contributeAuthActivity();
 
     @ContributesAndroidInjector(
-            modules ={MainFragmentBuildersModule.class, MainViewModelsModule.class}
+            modules ={MainFragmentBuildersModule.class, MainViewModelsModule.class, MainModule.class }
     )
     abstract MainActivity contributeMainActivity();
 
